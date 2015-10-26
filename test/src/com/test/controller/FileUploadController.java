@@ -78,8 +78,6 @@ public class FileUploadController implements ServletContextAware{
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			System.out.println("小齐齐说，想想,不靠谱");
-			map.addAttribute("a", "么么哒，再试试");
 			return new ModelAndView("lab");
 		}
 		
