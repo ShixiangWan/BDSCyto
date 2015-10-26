@@ -54,7 +54,7 @@ public class FileUploadController implements ServletContextAware{
 					   if (!flag) {
 						   boolean flag2 = iLabDAO.saveFilename(path + "\\" + tempName);
 						   if (flag2) {
-							   System.out.println("小齐齐说，想想存入成功啦");
+							   System.out.println("存入成功");
 						   }
 					   }
 					   
@@ -71,7 +71,6 @@ public class FileUploadController implements ServletContextAware{
 					   map.addAttribute("bestFeaNum", hashMap.get("bestFeaNum"));
 					   map.addAttribute("classifier", "Liblinear");
 					   map.addAttribute("algorithm", "Optimal");
-					   System.out.println("小齐齐说，想想返回页面啦");
 					   return new ModelAndView("lab");
 				}else{
 					return new ModelAndView("404");
