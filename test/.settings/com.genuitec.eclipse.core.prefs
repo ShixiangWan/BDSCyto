@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+validator.Checked=WebRoot/js/bootstrap.min.js,WebRoot/js/echarts-all.js,WebRoot/js/npm.js,WebRoot/js/jquery-2.1.1.min.js,WebRoot/header.jsp,WebRoot/js/bootstrap.js,WebRoot/index.jsp
+validator.Unchecked=
