@@ -133,9 +133,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		<nav>
 		  <ul class="pager">
-		    <li><p><a class="btn btn-primary btn-lg btn-center" href="lab.jsp" role="button">Go lab now!</a></p></li>
+		    <li><p><a class="btn btn-primary btn-lg btn-center" href="predict-lab.jsp" role="button">Go lab now!</a></p></li>
 		  </ul>
 		</nav>
+		
 		
 		
 	</div> 

@@ -12,8 +12,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="index.jsp">Home</a></li>
-            <li><a href="lab.jsp">Experiment</a></li>
-            <li><a href="#contact">Example</a></li>
+            <li><a href="class-lab.jsp">Classify</a></li>
+            <li><a href="predict-lab.jsp">Predict</a></li>
+            <li><a href="">Example</a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Downloads<span class="caret"></span></a>
               <ul class="dropdown-menu">

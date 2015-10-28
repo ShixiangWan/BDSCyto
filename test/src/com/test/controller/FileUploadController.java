@@ -3,6 +3,8 @@ package com.test.controller;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -18,6 +20,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.test.dao.ILabDAO;
+import com.test.lab.testRF;
+import com.test.mrmd.CaculateNum;
 import com.test.mrmd.FormatArff;
 import com.test.mrmd.MRMD;
 
@@ -32,13 +36,14 @@ public class FileUploadController implements ServletContextAware{
 		@Resource
 		private ILabDAO iLabDAO;
 		
-		@SuppressWarnings("rawtypes")
-		@RequestMapping(value="upload", method = RequestMethod.POST)
-		public ModelAndView handleUploadData(String name,@RequestParam("file") CommonsMultipartFile file,Model map,
+		@SuppressWarnings({ "rawtypes" })
+		@RequestMapping(value="predict", method = RequestMethod.POST)
+		public ModelAndView handleUploadData(String name,@RequestParam("file") CommonsMultipartFile file,
 				Integer initial,Integer times,Integer subtractor,Integer maximum){
 			try {
 				if (!file.isEmpty()) {
-					   String path = this.servletContext.getRealPath("/upload/");  //获取本地存储路径,末尾没有分隔符！！！
+					   String path = this.servletContext.getRealPath("/upload/");  //获取upload路径,末尾没有分隔符！！！
+					   String pathModel = this.servletContext.getRealPath("/model/");  //获取model路径,末尾没有分隔符！！！
 					   String fileName = file.getOriginalFilename();
 					   String fileType = fileName.substring(fileName.lastIndexOf(".")); //获取文件格式
 					   String tempName = new Date().getTime() + fileType; //按时间上传的文件命名
@@ -49,7 +54,7 @@ public class FileUploadController implements ServletContextAware{
 						    e.printStackTrace();
 					   }
 					   //将新文件名存入数据库,检查是否有相同名字的文件，若没有则存入，返回存入成功
-					   System.out.println(path + tempName);
+					   System.out.println(path + "\\" + tempName);
 					   boolean flag = iLabDAO.checkByFilename(path + "\\" + tempName);
 					   if (!flag) {
 						   boolean flag2 = iLabDAO.saveFilename(path + "\\" + tempName);
@@ -58,27 +63,24 @@ public class FileUploadController implements ServletContextAware{
 						   }
 					   }
 					   
-					   HashMap hashMap = handleMRMD(path,tempName,initial,times,subtractor,maximum);
+					   Map mymap = new testRF().run(path+"\\",tempName,"_test.arff",pathModel+"\\train.arff",pathModel+"\\cytoRF.model",2);
 					   
-					   System.out.println("bestAccuracy: "+hashMap.get("bestAccuracy"));
-					   System.out.println("bestFeaNum: "+hashMap.get("bestFeaNum"));
-					   
-					   map.addAttribute("pos", hashMap.get("pos"));
-					   map.addAttribute("neg", hashMap.get("neg"));
-					   map.addAttribute("error", hashMap.get("error"));
-					   map.addAttribute("feaNum", hashMap.get("feaNum"));
-					   map.addAttribute("bestAccuracy", hashMap.get("bestAccuracy"));
-					   map.addAttribute("bestFeaNum", hashMap.get("bestFeaNum"));
-					   map.addAttribute("classifier", "Liblinear");
-					   map.addAttribute("algorithm", "Optimal");
-					   return new ModelAndView("lab");
+					   Iterator it = mymap.entrySet().iterator();
+					   while (it.hasNext())
+					   {    
+						   Map.Entry pairs = (Map.Entry)it.next();    
+						   System.out.println(pairs.getKey() + " = " + pairs.getValue());    
+					   }
+					   if (mymap!=null) System.out.println("OK");
+
+					   return new ModelAndView("predict-lab", "mymap", mymap);
 				}else{
 					return new ModelAndView("404");
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-			return new ModelAndView("lab");
+			return new ModelAndView("predict-lab");
 		}
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -98,6 +100,40 @@ public class FileUploadController implements ServletContextAware{
 			return hashMap2;
 			
 		}
+		
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@RequestMapping(value="map")
+		public ModelAndView handleHashMap() {
+			Map map2 = new HashMap<>();
+			map2.put("shixiang1", "1");
+			map2.put("shixiang2", "2");
+			map2.put("shixiang3", "3");
+			map2.put("shixiang4", "4");
+			map2.put("shixiang5", "5");
+			map2.put("shixiang6", "6");
+			map2.put("shixiang7", "7");
+			map2.put("shixiang8", "8");
+			map2.put("shixiang9", "9");
+			return new ModelAndView("predict-lab", "mymap", map2);
+		}
+		
+		
+		/*@SuppressWarnings("rawtypes")
+		public static void main(String[] args) {
+			设置路径和蛋白质文件
+			String path = "C:\\ShixiangWan\\workspace\\test\\WebRoot\\upload";
+			String pathModel = "C:\\ShixiangWan\\workspace\\test\\WebRoot\\model";
+			String tempName = "test.fasta";
+			Map f = new testRF().run(path+"\\",tempName,"_test.arff",pathModel+"\\train.arff",pathModel+"\\cytoRF.model",2);
+			Iterator it = f.entrySet().iterator();
+			while (it.hasNext())
+			{    
+			        Map.Entry pairs = (Map.Entry)it.next();    
+			        System.out.println(pairs.getKey() + " = " + pairs.getValue());    
+			}
+			if (f!=null) System.out.println("OK");
+			
+		}*/
 		
 		
 }
